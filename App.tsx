@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import type {PropsWithChildren} from 'react';
+import type { PropsWithChildren } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -14,32 +14,32 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
-  View,
-} from 'react-native';
+  View
+} from "react-native";
 
 import {
   Colors,
   DebugInstructions,
   Header,
   LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import {getIp} from 'com.sknyazev';
+  ReloadInstructions
+} from "react-native/Libraries/NewAppScreen";
+import { getIp, getIpUsingWindow } from "com.sknyazev";
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
 
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+function Section({ children, title }: SectionProps): JSX.Element {
+  const isDarkMode = useColorScheme() === "dark";
   return (
     <View style={styles.sectionContainer}>
       <Text
         style={[
           styles.sectionTitle,
           {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
+            color: isDarkMode ? Colors.white : Colors.black
+          }
         ]}>
         {title}
       </Text>
@@ -47,8 +47,8 @@ function Section({children, title}: SectionProps): JSX.Element {
         style={[
           styles.sectionDescription,
           {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
+            color: isDarkMode ? Colors.light : Colors.dark
+          }
         ]}>
         {children}
       </Text>
@@ -57,56 +57,68 @@ function Section({children, title}: SectionProps): JSX.Element {
 }
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
+  const isDarkMode = useColorScheme() === "dark";
 
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
   };
-  const [ip, setIp] = useState('');
-  const [error, setError] = useState(false);
-  const [state, setState] = useState('');
-  useEffect(() => {
-    setState('loading');
-    getIp()
-      .then((res) => {
-        console.log(res);
-        setState('success');
-        setIp(res)
-        console.log(res);
-      })
-      .catch((err) => {
-        console.error('Error:', err);
-        setState('error');
-        setError(err);
-      });
-  }, []);
+
+
+  const [state, setState] = useState("");
+  const [ip, setIp] = useState("");
+  const ktor = false;
+  if (ktor) {
+    useEffect(() => {
+      getIp()
+        .then(res => {
+          console.log(res);
+          setState("success");
+          setIp(res);
+          console.log(res);
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          setState("error");
+        });
+    }, []);
+  } else {
+    useEffect(() => {
+      setState("loading");
+      getIpUsingWindow()
+        .then(res => {
+          console.log(res);
+          setState("success");
+          setIp(res);
+          console.log(res);
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          setState("error");
+        });
+    }, []);
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            backgroundColor: isDarkMode ? Colors.black : Colors.white
           }}>
-          <Section title="Step One xD">
-                {state === 'loading' ? (
-                  <Text>Loading...</Text>
-                ) : (
-                  <Text>{ip}...</Text>
-                )}
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="Window">
+            {state === "loading" ? (
+              <Text>Loading...</Text>
+            ) : (
+              <Text>{ip}...</Text>
+            )}
           </Section>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -116,20 +128,20 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
-    paddingHorizontal: 24,
+    paddingHorizontal: 24
   },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600"
   },
   sectionDescription: {
     marginTop: 8,
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: "400"
   },
   highlight: {
-    fontWeight: '700',
-  },
+    fontWeight: "700"
+  }
 });
 
 export default App;
